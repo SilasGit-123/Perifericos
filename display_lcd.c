@@ -50,8 +50,7 @@ void cmd_lcd(unsigned char c, char cd)
 		if((cd==0)&&(c<127))  //se for instrução espera tempo de resposta do display
 				_delay_ms(2);
 		c=c<<4;
-		DADOS_lCD=((DADOS_lCD & 0x0F)|(c & 0XF0));  //tecnica bitwise para manter os dados na portx nao utilizada intacta
-		
+		DADOS_lCD=((DADOS_lCD & 0x0F)|(c & 0XF0));  //tecnica bitwise para manter os dados na portx nao utilizada intacta	
 	}
 	i=2;	
 }
@@ -80,8 +79,6 @@ int main(void)
 {
     DDRD = 0xFF; 
 	inicializa_lcd();
-	SETBIT(PORTD,PD0);
-    CLEARBIT(PORTD,PD1);
 	escreve_lcd("Interface de 4 bitss");
 	cmd_lcd(0xC0,0);
 	escreve_lcd("dados de 4 bits");
