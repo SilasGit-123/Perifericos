@@ -23,7 +23,7 @@
 #define FLIPBIT(ADDRESS,BIT) (ADDRESS ^= (1<<BIT))   //complemeta valor do bit
 #define CHECKBIT(ADDRESS,BIT) (ADDRESS & (1<<BIT))   //leitura (PINx,pxx)
 
-#define DADOS_lCD	PORTD            //defina portx como porta de barramentos
+#define DADOS_lCD	PORTD             //defina portx como porta de barramentos
 #define RS          PD2              //pino de instrucoes ou dados para lcd
 #define E           PD3              //pino enable lcd
 
@@ -34,7 +34,7 @@ unsigned char i=1;                   //variavel para inicializar lcd
 //-------------------------------------------------------------------------------------------
 void cmd_lcd(unsigned char c, char cd)
 {
-	DADOS_lCD =c; //Primeiro os 4 bits MSB depois os LSB
+	DADOS_lCD =((DADOS_lCD & 0x0F)|(c & 0XF0)) ; //Primeiro os 4 bits MSB depois os LSB e tecnica bitwise para manter os dados na portx nao utilizada intacta
 	
 	for (;i!=0;i--)
 	{
@@ -49,7 +49,9 @@ void cmd_lcd(unsigned char c, char cd)
 		
 		if((cd==0)&&(c<127))  //se for instrução espera tempo de resposta do display
 				_delay_ms(2);
-		DADOS_lCD=c<<4;
+		c=c<<4;
+		DADOS_lCD=((DADOS_lCD & 0x0F)|(c & 0XF0));  //tecnica bitwise para manter os dados na portx nao utilizada intacta
+		
 	}
 	i=2;	
 }
@@ -78,13 +80,17 @@ int main(void)
 {
     DDRD = 0xFF; 
 	inicializa_lcd();
-	escreve_lcd("Interface de");
+	SETBIT(PORTD,PD0);
+    CLEARBIT(PORTD,PD1);
+	escreve_lcd("Interface de 4 bitss");
 	cmd_lcd(0xC0,0);
 	escreve_lcd("dados de 4 bits");
 	cmd_lcd(0x94,0);
 	escreve_lcd("funciona");
 	cmd_lcd(0xD4,0);
 	escreve_lcd("ok");
+
+	
 	
 	
     while (1) 
