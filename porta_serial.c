@@ -32,6 +32,19 @@ void uart_envia(unsigned char caracter){
      UDR = caracter;                                 //transmite caracter
 }
 //********************************************************************************
+// Envia um string atraves da USART
+//********************************************************************************
+void uartstring_envia(char texto[])
+{
+	 int tamanho =strlen(texto);
+	 for (int cont =0 ;cont <= tamanho;cont++)
+	 
+	 {
+		 uart_envia(texto[cont]);
+	 }
+	
+}
+//********************************************************************************
 // Recebe um dado quando vector de interrupção UART_RX_vect é disparado
 //********************************************************************************
 void uart_recebe(void){ 
@@ -50,6 +63,8 @@ void uart_recebe(void){
 ISR(USART_RXC_vect){
        uart_recebe();                        //recebe dado da UART do microcontrolador
 }
+
+
 
 
 int main(void)
